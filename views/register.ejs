@@ -1,0 +1,19 @@
+<html>
+    <head>
+        <title>Register User</title>
+    </head>
+    <body>
+        <form action="user/register" method="POST">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" placeholder="Username" required/>
+            <label for="password">Password (Minimum 8 characters) </label>
+            <input type="password" name="password" id="password" minlength="8" required/>
+            <label for="conf_password">Confirm Password</label>
+            <input type="password" name="conf_password" id="conf_password" required/>
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="Email Address" required/>
+            <button>Register</button>
+        </form>
+
+    </body>
+</html>

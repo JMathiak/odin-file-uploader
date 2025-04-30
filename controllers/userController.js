@@ -9,6 +9,7 @@ async function createTestUser(req, res) {
       password: "test123",
     },
   });
+
   res.redirect("/");
 }
 
