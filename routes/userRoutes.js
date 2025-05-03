@@ -24,10 +24,39 @@ const validateSignup = [
         throw new Error(
           "A user with the username " + value + " already exists."
         );
-        console.log(users);
+      }
+    }),
+  body("password")
+    .trim()
+    .isLength({ min: 8, max: 16 })
+    .withMessage(
+      "Password must be at least 8 characters and no longer than 16 characters"
+    ),
+  body("conf_password")
+    .trim()
+    .custom(async (conf_password, { req }) => {
+      const password = req.body.password;
+      if (password !== conf_password) {
+        throw new Error("Passwords must be the same");
+      }
+    }),
+  body("email")
+    .trim()
+    .isEmail()
+    .custom(async (value) => {
+      const users = await prisma.user.findMany({
+        where: {
+          email: {
+            equals: value,
+          },
+        },
+      });
+      if (users.length > 0) {
+        throw new Error("A user with the email " + value + " already exists.");
       }
     }),
 ];
 
-userRouter.post("/register", userController.createTestUser);
+userRouter.post("/register", [validateSignup], userController.createTestUser);
+userRouter.get("/register", (req, res) => res.render("register"));
 module.exports = userRouter;

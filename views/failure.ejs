@@ -1,0 +1,22 @@
+<html>
+    <head>
+        <title>Fail</title>
+    </head>
+    <body>
+        <h1>Fail</h1>
+        <div>
+            <% if(errorMessage.length > 0){ %>
+            <% errorMessage.forEach((error) => {%> 
+            
+            <h2> <%- error.msg %></h2>
+            
+            <% }) %>
+            <% } %>
+        </div>
+
+        <div>
+            <a href="/">Go Home</a>
+            <a href="/user/register">Back to Register</a>
+        </div>
+    </body>
+</html>
