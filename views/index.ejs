@@ -4,9 +4,13 @@
         </Title>
     </head>
     <body>
+        <% if(locals.user) {%>
+            <h1>Welcome back <%= user.username %></h1>
+            <% } %>
         <form action="user/register" method="POST">
             <button>Test Register</button>
         </form>
         <a href="/user/register">Register</a>
+        <a href="/user/login">Log In</a>
     </body>
 </html>

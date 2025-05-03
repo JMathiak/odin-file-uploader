@@ -2,6 +2,8 @@ const { validationResult } = require("express-validator");
 const { PrismaClient } = require("../generated/prisma/client.js");
 const prisma = new PrismaClient();
 const bcrypt = require("bcryptjs");
+const passport = require("passport");
+const LocalStrategy = require("passport-local");
 
 async function createTestUser(req, res) {
   const errors = validationResult(req);
@@ -22,6 +24,14 @@ async function createTestUser(req, res) {
   }
 }
 
+async function userLogIn(req, res) {
+  passport.authenticate("local", {
+    successRedirect: "/",
+    failureRedirect: "/user/login",
+  });
+}
+
 module.exports = {
   createTestUser,
+  userLogIn,
 };

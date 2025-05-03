@@ -4,7 +4,7 @@ const userController = require("../controllers/userController.js");
 const { body } = require("express-validator");
 const { PrismaClient } = require("../generated/prisma/client.js");
 const prisma = new PrismaClient();
-
+const passport = require("passport");
 const validateSignup = [
   body("username")
     .trim()
@@ -59,4 +59,12 @@ const validateSignup = [
 
 userRouter.post("/register", [validateSignup], userController.createTestUser);
 userRouter.get("/register", (req, res) => res.render("register"));
+userRouter.get("/login", (req, res) => res.render("login"));
+userRouter.post(
+  "/login",
+  passport.authenticate("local", {
+    successRedirect: "/",
+    failureRedirect: "/",
+  })
+);
 module.exports = userRouter;
