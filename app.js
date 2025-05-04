@@ -85,5 +85,8 @@ app.use("/", baseRouter);
 const userRouter = require("./routes/userRoutes.js");
 app.use("/user", userRouter);
 
+const fileRouter = require("./routes/fileRoutes.js");
+app.use("/file", fileRouter);
+
 const PORT = 3000;
 app.listen(PORT, () => console.log(`Express is now listening on port ${PORT}`));
