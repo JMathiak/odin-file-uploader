@@ -24,7 +24,7 @@ function loggedIn(req, res, next) {
 
 fileRouter.get("/upload", loggedIn, (req, res) => res.render("upload"));
 fileRouter.post("/upload", upload.single("avatar"), (req, res) =>
-  console.log(req.file)
+  res.redirect("/file/upload")
 );
 
 module.exports = fileRouter;
