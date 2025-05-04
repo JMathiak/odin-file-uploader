@@ -8,7 +8,7 @@ const storage = multer.diskStorage({
   },
   filename: (req, file, cb) => {
     const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-    cb(null, uniqueSuffix + path.extname(file.originalname));
+    cb(null, uniqueSuffix + "-" + file.originalname);
   },
 });
 
@@ -24,7 +24,7 @@ function loggedIn(req, res, next) {
 
 fileRouter.get("/upload", loggedIn, (req, res) => res.render("upload"));
 fileRouter.post("/upload", upload.single("avatar"), (req, res) =>
-  res.redirect("/")
+  console.log(req.file)
 );
 
 module.exports = fileRouter;
