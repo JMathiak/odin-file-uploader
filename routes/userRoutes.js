@@ -57,6 +57,13 @@ const validateSignup = [
     }),
 ];
 
+function loggedIn(req, res, next) {
+  if (req.user) {
+    next();
+  } else {
+    res.redirect("/login");
+  }
+}
 userRouter.post("/register", [validateSignup], userController.createTestUser);
 userRouter.get("/register", (req, res) => res.render("register"));
 userRouter.get("/login", (req, res) => res.render("login"));
@@ -67,4 +74,11 @@ userRouter.post(
     failureRedirect: "/",
   })
 );
+
+userRouter.get("/log-out", (req, res, next) => {
+  req.logout((err) => {
+    if (err) return next(err);
+    res.redirect("/");
+  });
+});
 module.exports = userRouter;

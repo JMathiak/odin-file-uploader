@@ -1,11 +1,13 @@
 const express = require("express");
 const path = require("node:path");
 const passport = require("passport");
-const session = require("express-session");
+const expressSession = require("express-session");
 var LocalStrategy = require("passport-local");
 const { PrismaClient } = require("./generated/prisma/client.js");
 const prisma = new PrismaClient();
 const bcrypt = require("bcryptjs");
+const { PrismaSessionStore } = require("@quixo3/prisma-session-store");
+
 //require("./configurePassport.js");
 
 //const bcrypt = require("brcryptjs");
@@ -15,8 +17,26 @@ app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 app.use(express.urlencoded({ extended: true }));
 app.use(passport.initialize());
-app.use(session({ secret: "cats", resave: false, saveUninitialized: false }));
+app.use(
+  expressSession({ secret: "cats", resave: false, saveUninitialized: false })
+);
 app.use(passport.session());
+
+app.use(
+  expressSession({
+    cookie: {
+      maxAge: 7 * 24 * 60 * 60 * 1000, // ms
+    },
+    secret: "a santa at nasa",
+    resave: true,
+    saveUninitialized: true,
+    store: new PrismaSessionStore(prisma, {
+      checkPeriod: 2 * 60 * 1000, //ms
+      dbRecordIdIsSessionId: true,
+      dbRecordIdFunction: undefined,
+    }),
+  })
+);
 
 passport.use(
   new LocalStrategy(async (username, password, done) => {
@@ -27,7 +47,7 @@ passport.use(
           username: username,
         },
       });
-      console.log(user[0]);
+      console.log(user);
       if (!user) {
         return done(null, false, { message: "Incorrect username " });
       }
