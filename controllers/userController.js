@@ -5,7 +5,7 @@ const bcrypt = require("bcryptjs");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
 
-async function createTestUser(req, res) {
+async function createUser(req, res) {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     console.log(errors.errors);
@@ -32,6 +32,6 @@ async function userLogIn(req, res) {
 }
 
 module.exports = {
-  createTestUser,
+  createUser,
   userLogIn,
 };

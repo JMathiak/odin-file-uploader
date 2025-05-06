@@ -64,7 +64,7 @@ function loggedIn(req, res, next) {
     res.redirect("/login");
   }
 }
-userRouter.post("/register", [validateSignup], userController.createTestUser);
+userRouter.post("/register", [validateSignup], userController.createUser);
 userRouter.get("/register", (req, res) => res.render("register"));
 userRouter.get("/login", (req, res) => res.render("login"));
 userRouter.post(
