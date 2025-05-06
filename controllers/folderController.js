@@ -10,13 +10,15 @@ async function createFolder(req, res) {
     await prisma.folder.create({
       data: {
         ownerId: req.user.id,
-        name: req.body.name,
+        name: req.body.foldername,
       },
     });
     res.redirect("/");
   }
 }
 
+async function getFileList(req, res) {}
 module.exports = {
   createFolder,
+  getFileList,
 };

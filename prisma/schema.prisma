@@ -14,25 +14,24 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Session{
-  id String @id
-  sid String @unique
-  data  String 
+model Session {
+  id        String   @id
+  sid       String   @unique
+  data      String
   expiresAt DateTime
 }
 
 model User {
-  id  Int @id @default(autoincrement())
-  email String @unique
-  username String @unique @db.VarChar(16)
+  id       Int      @id @default(autoincrement())
+  email    String   @unique
+  username String   @unique @db.VarChar(16)
   password String
+  Folder   Folder[]
 }
 
-
-model Folder{
-  id Int @id @default(autoincrement())
-  owner User @relation(fields: [ownerId], references: [id])
+model Folder {
+  id      Int    @id @default(autoincrement())
+  owner   User   @relation(fields: [ownerId], references: [id])
   ownerId Int
-  name String @unique
-  
+  name    String @unique
 }

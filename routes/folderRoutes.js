@@ -3,7 +3,7 @@ const folderRouter = Router();
 const folderController = require("../controllers/folderController.js");
 const { PrismaClient } = require("../generated/prisma/client.js");
 const prisma = new PrismaClient();
-
+const { body } = require("express-validator");
 const validateName = [
   body("foldername")
     .trim()
@@ -31,4 +31,5 @@ function loggedIn(req, res, next) {
 
 folderRouter.get("/create", loggedIn, (req, res) => res.render("createFolder"));
 folderRouter.post("/create", [validateName], folderController.createFolder);
+folderRouter.get("/");
 module.exports = folderRouter;

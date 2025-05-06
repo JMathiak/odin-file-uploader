@@ -22,8 +22,16 @@ model Session {
 }
 
 model User {
-  id       Int    @id @default(autoincrement())
-  email    String @unique
-  username String @unique @db.VarChar(16)
+  id       Int      @id @default(autoincrement())
+  email    String   @unique
+  username String   @unique @db.VarChar(16)
   password String
+  Folder   Folder[]
+}
+
+model Folder {
+  id      Int    @id @default(autoincrement())
+  owner   User   @relation(fields: [ownerId], references: [id])
+  ownerId Int
+  name    String @unique
 }
