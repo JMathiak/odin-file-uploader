@@ -17,7 +17,10 @@ async function createFolder(req, res) {
   }
 }
 
-async function getFileList(req, res) {}
+async function getFileList(req, res) {
+  let folders = await prisma.folder.findMany();
+  res.render("f");
+}
 module.exports = {
   createFolder,
   getFileList,
