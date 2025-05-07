@@ -17,11 +17,28 @@ async function createFolder(req, res) {
   }
 }
 
-async function getFileList(req, res) {
-  let folders = await prisma.folder.findMany();
-  res.render("f");
+async function getFolderList(req, res) {
+  let folders = await prisma.folder.findMany({
+    where: {
+      ownerId: req.user.id,
+    },
+  });
+  // [ { id: 1, ownerId: 2, name: 'Hockey' } ]
+  res.render("folderlist", { folders: folders, user: req.user });
+}
+
+async function deleteFolder(req, res) {
+  let fId = parseInt(req.params.id);
+  await prisma.folder.delete({
+    where: {
+      id: fId,
+    },
+  });
+
+  res.redirect("/folder");
 }
 module.exports = {
   createFolder,
-  getFileList,
+  getFolderList,
+  deleteFolder,
 };
