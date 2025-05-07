@@ -88,7 +88,7 @@ app.use("/user", userRouter);
 const fileRouter = require("./routes/fileRoutes.js");
 app.use("/file", fileRouter);
 
-const folderRouter = require("./routes/FolderRoutes.js");
+const folderRouter = require("./routes/folderRoutes.js");
 app.use("/folder", folderRouter);
 
 const PORT = 3000;
