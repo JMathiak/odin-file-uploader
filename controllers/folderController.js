@@ -37,8 +37,33 @@ async function deleteFolder(req, res) {
 
   res.redirect("/folder");
 }
+
+async function getEditPage(req, res) {
+  let fId = parseInt(req.params.id);
+  let folder = await prisma.folder.findFirst({
+    where: {
+      id: fId,
+    },
+  });
+  res.render("editfolder", { folder: folder });
+}
+
+async function postEditPage(req, res) {
+  let fId = parseInt(req.params.id);
+  await prisma.folder.update({
+    where: {
+      id: fId,
+    },
+    data: {
+      name: req.body.foldername,
+    },
+  });
+  res.redirect("/");
+}
 module.exports = {
   createFolder,
   getFolderList,
   deleteFolder,
+  getEditPage,
+  postEditPage,
 };

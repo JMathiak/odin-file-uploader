@@ -1,0 +1,12 @@
+<html>
+    <head>
+        <title>Update Folder</title>
+    </head>
+    <body>
+        <form action="<%= folder.id %>" method="POST">
+            <label for="foldername">Folder Name</label>
+            <input type="text" id="foldername" name="foldername" value="<%= folder.name %>" required>
+            <button>Update</button>
+        </form>
+    </body>
+</html>
