@@ -1,7 +1,7 @@
 const { Router } = require("express");
 const fileRouter = Router();
 const multer = require("multer");
-//const { supabase } = require("../supabase");
+const supabase = require("../supabase");
 const { decode } = require("base64-arraybuffer");
 const path = require("node:path");
 const fileController = require("../controllers/fileController.js");
@@ -14,11 +14,11 @@ const fileController = require("../controllers/fileController.js");
 //     cb(null, uniqueSuffix + "-" + file.originalname);
 //   },
 // });
-const { createClient } = require("@supabase/supabase-js");
+// const { createClient } = require("@supabase/supabase-js");
 
-const supabaseUrl = process.env.SUPABASE_PROJECT_URL;
-const supabaseKey = process.env.SUPABASE_ANON_KEY;
-const supabase = createClient(supabaseUrl, supabaseKey);
+// const supabaseUrl = process.env.SUPABASE_PROJECT_URL;
+// const supabaseKey = process.env.SUPABASE_ANON_KEY;
+// const supabase = createClient(supabaseUrl, supabaseKey);
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
@@ -31,7 +31,7 @@ function loggedIn(req, res, next) {
   }
 }
 
-fileRouter.get("/upload", loggedIn, (req, res) => res.render("upload"));
+fileRouter.get("/upload", loggedIn, fileController.getUploadPage);
 fileRouter.post("/upload", upload.single("file"), async (req, res) => {
   try {
     const file = req.file;
@@ -40,9 +40,11 @@ fileRouter.post("/upload", upload.single("file"), async (req, res) => {
       return;
     }
     const fileBase64 = decode(file.buffer.toString("base64"));
+    let path = "/" + req.body.folder + "/" + file.originalname;
+    console.log(path);
     const { data, error } = await supabase.storage
-      .from("images")
-      .upload(file.originalname, fileBase64, {
+      .from(req.user.username)
+      .upload(path, file.originalname, fileBase64, {
         contentType: "image/jpg",
       });
     if (error) {

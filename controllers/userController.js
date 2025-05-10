@@ -4,6 +4,7 @@ const prisma = new PrismaClient();
 const bcrypt = require("bcryptjs");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
+const supabase = require("../supabase.js");
 
 async function createUser(req, res) {
   const errors = validationResult(req);
@@ -19,7 +20,14 @@ async function createUser(req, res) {
         password: hashedPassword,
       },
     });
-
+    const { data, error } = await supabase.storage.createBucket(
+      req.body.username,
+      {
+        public: true,
+        allowedMimeTypes: [""],
+        fileSizeLimit: 1024,
+      }
+    );
     res.redirect("/");
   }
 }

@@ -11,6 +11,7 @@ const validateName = [
       const folders = prisma.folder.findMany({
         where: {
           name: {
+            ownerId: req.user.id,
             equals: value,
           },
         },

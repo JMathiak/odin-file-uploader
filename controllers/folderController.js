@@ -1,5 +1,10 @@
 const { validationResult } = require("express-validator");
 const { PrismaClient } = require("../generated/prisma/client.js");
+const supabase = require("../supabase");
+// const { createClient } = require("@supabase/supabase-js");
+// const supabaseUrl = process.env.SUPABASE_PROJECT_URL;
+// const supabaseKey = process.env.SUPABASE_ANON_KEY;
+// const supabase = createClient(supabaseUrl, supabaseKey);
 const prisma = new PrismaClient();
 
 async function createFolder(req, res) {
@@ -26,6 +31,12 @@ async function getFolderList(req, res) {
   // [ { id: 1, ownerId: 2, name: 'Hockey' } ]
   res.render("folderlist", { folders: folders, user: req.user });
 }
+
+// async function getFolderList(req, res) {
+//   const { data, error } = await supabase.storage.listBuckets();
+
+//   console.log(data);
+// }
 
 async function deleteFolder(req, res) {
   let fId = parseInt(req.params.id);

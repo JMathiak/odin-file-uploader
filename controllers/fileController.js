@@ -1,5 +1,7 @@
-const { supabase } = require("../supabase");
+const supabase = require("../supabase");
 const { decode } = require("base64-arraybuffer");
+const { PrismaClient } = require("../generated/prisma/client.js");
+const prisma = new PrismaClient();
 
 async function postImage(req, res) {
   try {
@@ -9,6 +11,9 @@ async function postImage(req, res) {
       return;
     }
     const fileBase64 = decode(file.buffer.toString("base64"));
+    let path =
+      req.user.username + "/" + req.body.folder + "/" + file.originalname;
+    console.log(path);
     const { data, error } = await supabase.storage
       .from("images")
       .upload(file.originalname, fileBase64, {
@@ -28,6 +33,17 @@ async function postImage(req, res) {
   }
 }
 
-module.export = {
+async function getUploadPage(req, res) {
+  let folders = await prisma.folder.findMany({
+    where: {
+      ownerId: req.user.id,
+    },
+  });
+  console.log(folders);
+  res.render("upload", { folders: folders });
+}
+
+module.exports = {
   postImage,
+  getUploadPage,
 };

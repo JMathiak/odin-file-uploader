@@ -5,6 +5,11 @@
     <body>
         <form action="upload" method="post" enctype="multipart/form-data">
             <input type="file" name="file" />
+            <select name="folder" id="folder">
+                <% folders.forEach(folder=>{ %>
+                    <option value="<%= folder.name %>"><%= folder.name %></option>
+                <% }) %>
+            </select>
             <input type="submit" value="Upload" class="btn btn-default">
           </form>
     </body>
