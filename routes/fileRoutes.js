@@ -42,11 +42,13 @@ fileRouter.post("/upload", upload.single("file"), async (req, res) => {
       return;
     }
     const fileBase64 = decode(file.buffer.toString("base64"));
+
+    console.log(file);
     let path = "/" + req.body.folder + "/" + file.originalname;
     console.log(path);
     const { data, error } = await supabase.storage
       .from(req.user.username)
-      .upload(path, file.originalname, fileBase64, {
+      .upload(path, fileBase64, {
         contentType: "image/jpg",
       });
     if (error) {
@@ -57,10 +59,10 @@ fileRouter.post("/upload", upload.single("file"), async (req, res) => {
       .from("images")
       .getPublicUrl(data.path);
     console.log(file);
-    res.status(200).redirect("file/upload/success");
+    res.status(200).redirect("upload/success");
   } catch (error) {
     console.log(error);
-    res.status(500).redirect("file/upload/failure");
+    res.status(500).redirect("upload/failure");
   }
 });
 
