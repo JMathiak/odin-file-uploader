@@ -32,6 +32,8 @@ function loggedIn(req, res, next) {
 }
 
 fileRouter.get("/upload", loggedIn, fileController.getUploadPage);
+fileRouter.get("/upload/success", (req, res) => res.render("uploadSuccess"));
+fileRouter.get("/upload/failure", (req, res) => res.render("uploadFail"));
 fileRouter.post("/upload", upload.single("file"), async (req, res) => {
   try {
     const file = req.file;
@@ -55,10 +57,10 @@ fileRouter.post("/upload", upload.single("file"), async (req, res) => {
       .from("images")
       .getPublicUrl(data.path);
     console.log(file);
-    res.status(200).json({ image: image.publicUrl });
+    res.status(200).redirect("file/upload/success");
   } catch (error) {
     console.log(error);
-    res.status(500).json({ error: error });
+    res.status(500).redirect("file/upload/failure");
   }
 });
 
