@@ -8,13 +8,18 @@ const supabase = require("../supabase");
 const prisma = new PrismaClient();
 
 async function createFolder(req, res) {
+  console.log(req, req.user.id, req.body.foldername);
+  let userId = req.user.id;
+  let fName = req.body.foldername;
+  console.log(fName);
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
+    console.log("here", errors);
     return res.status(400).render("failure", { errorMessage: errors.errors });
   } else {
     await prisma.folder.create({
       data: {
-        ownerId: req.user.id,
+        ownerId: userId,
         name: req.body.foldername,
       },
     });
@@ -40,12 +45,30 @@ async function getFolderList(req, res) {
 
 async function deleteFolder(req, res) {
   let fId = parseInt(req.params.id);
-  await prisma.folder.delete({
+  let folder = await prisma.folder.findFirst({
     where: {
       id: fId,
     },
   });
 
+  const { data, error } = await supabase.storage
+    .from(req.user.username)
+    .list(folder.name);
+
+  console.log(data);
+  let files = data;
+  for (let i = 0; i < files.length; i++) {
+    let path = folder.name + "/" + files[i].name;
+    const { data, error } = await supabase.storage
+      .from(req.user.username)
+      .remove(path);
+  }
+
+  await prisma.folder.delete({
+    where: {
+      id: fId,
+    },
+  });
   res.redirect("/folder");
 }
 

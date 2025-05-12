@@ -11,10 +11,15 @@
             <button>Test Register</button>
         </form>
         <a href="/user/register">Register</a>
+        <% if (!locals.user) {%> 
         <a href="/user/login">Log In</a>
+        <% } %>
+        <% if(locals.user) {%>
         <a href="/user/log-out">Log out</a>
         <a href="/file/Upload">Upload File</a>
-        <a href="/folder/create">Create Folder</a>
+        <a href="/folder/create/<%= user.id %>">Create Folder</a>
         <a href="/folder">View Folders</a>
+        <% } %>
+       
     </body>
 </html>

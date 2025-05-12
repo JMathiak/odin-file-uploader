@@ -25,7 +25,6 @@ async function createUser(req, res) {
       {
         public: true,
         allowedMimeTypes: [""],
-        fileSizeLimit: 1024,
       }
     );
     res.redirect("/");

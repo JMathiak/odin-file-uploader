@@ -7,12 +7,14 @@ const { body } = require("express-validator");
 const validateName = [
   body("foldername")
     .trim()
-    .custom(async (value) => {
+    .custom(async (value, { req }) => {
       const folders = prisma.folder.findMany({
         where: {
           name: {
-            ownerId: req.user.id,
             equals: value,
+          },
+          id: {
+            equals: req.params.id,
           },
         },
       });
@@ -30,8 +32,10 @@ function loggedIn(req, res, next) {
   }
 }
 
-folderRouter.get("/create", loggedIn, (req, res) => res.render("createFolder"));
-folderRouter.post("/create", [validateName], folderController.createFolder);
+folderRouter.get("/create/:id", loggedIn, (req, res) =>
+  res.render("createFolder")
+);
+folderRouter.post("/create/", [validateName], folderController.createFolder);
 folderRouter.get("/", loggedIn, folderController.getFolderList);
 folderRouter.post("/delete/:id", folderController.deleteFolder);
 folderRouter.get("/update/:id", loggedIn, folderController.getEditPage);
