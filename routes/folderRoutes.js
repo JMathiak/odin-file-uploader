@@ -38,6 +38,6 @@ folderRouter.get("/create/:id", loggedIn, (req, res) =>
 folderRouter.post("/create/", [validateName], folderController.createFolder);
 folderRouter.get("/", loggedIn, folderController.getFolderList);
 folderRouter.post("/delete/:id", folderController.deleteFolder);
-folderRouter.get("/update/:id", loggedIn, folderController.getEditPage);
-folderRouter.post("/update/:id", folderController.postEditPage);
+folderRouter.get("/update/:id", loggedIn, folderController.getEditFolder);
+folderRouter.post("/update/:id", folderController.postEditFolder);
 module.exports = folderRouter;

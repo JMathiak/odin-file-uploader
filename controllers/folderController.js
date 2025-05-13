@@ -72,7 +72,7 @@ async function deleteFolder(req, res) {
   res.redirect("/folder");
 }
 
-async function getEditPage(req, res) {
+async function getEditFolder(req, res) {
   let fId = parseInt(req.params.id);
   let folder = await prisma.folder.findFirst({
     where: {
@@ -82,8 +82,26 @@ async function getEditPage(req, res) {
   res.render("editfolder", { folder: folder });
 }
 
-async function postEditPage(req, res) {
+async function postEditFolder(req, res) {
   let fId = parseInt(req.params.id);
+  let folder = await prisma.folder.findFirst({
+    where: {
+      id: fId,
+    },
+  });
+
+  const { data, error } = await supabase.storage
+    .from(req.user.username)
+    .list(folder.name);
+
+  let files = data;
+  for (let i = 0; i < files.length; i++) {
+    let oldPath = folder.name + "/" + files[i].name;
+    let newPath = req.body.foldername + "/" + files[i].name;
+    const { data, error } = await supabase.storage
+      .from(req.user.username)
+      .move(oldPath, newPath);
+  }
   await prisma.folder.update({
     where: {
       id: fId,
@@ -98,6 +116,6 @@ module.exports = {
   createFolder,
   getFolderList,
   deleteFolder,
-  getEditPage,
-  postEditPage,
+  getEditFolder,
+  postEditFolder,
 };
