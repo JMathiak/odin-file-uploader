@@ -6,5 +6,6 @@
         <h1><%= file.name %></h1>
         <h2>Size: <%= file.metadata.size %> kB</h2>
         <h2>Uploaded at: <%= file.created_at %></h2>
+        <a href="/file/download/<%= file.id%>">Download File</a>
     </body>
 </html>

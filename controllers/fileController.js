@@ -2,6 +2,7 @@ const supabase = require("../supabase");
 const { decode } = require("base64-arraybuffer");
 const { PrismaClient } = require("../generated/prisma/client.js");
 const prisma = new PrismaClient();
+const request = require("superagent");
 
 async function postImage(req, res) {
   try {
@@ -59,10 +60,32 @@ async function getDetails(req, res) {
 
   const file = data.filter((file) => file.id === fileID);
 
-  res.render("fileDetails", { file: file[0] });
+  res.render("fileDetails", { file: file[0], folder: folderID });
 }
+
+async function downloadFile(req, res) {
+  let folderID = parseInt(req.params.folderId);
+  let fileID = req.params.fileId;
+  let file = await prisma.file.findFirst({
+    where: {
+      id: fileID,
+    },
+  });
+  console.log(file);
+  const { data } = supabase.storage
+    .from(req.user.username)
+    .getPublicUrl(file.path, {
+      download: true,
+    });
+
+  console.log(data);
+  res.set("Content-disposition", `attachment; filename=${file.name}`);
+  request(data.publicUrl).pipe(res);
+}
+
 module.exports = {
   postImage,
   getUploadPage,
   getDetails,
+  downloadFile,
 };

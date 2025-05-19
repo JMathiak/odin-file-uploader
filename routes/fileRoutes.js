@@ -5,6 +5,8 @@ const supabase = require("../supabase");
 const { decode } = require("base64-arraybuffer");
 const path = require("node:path");
 const fileController = require("../controllers/fileController.js");
+const { PrismaClient } = require("../generated/prisma/client.js");
+const prisma = new PrismaClient();
 // const storage = multer.diskStorage({
 //   destination: (req, file, cb) => {
 //     cb(null, "uploads/"); // Files will be stored in the 'uploads' folder
@@ -46,6 +48,7 @@ fileRouter.post("/upload", upload.single("file"), async (req, res) => {
     console.log(file);
     let path = "/" + req.body.folder + "/" + file.originalname;
     console.log(path);
+    console.log(req.body);
     const { data, error } = await supabase.storage
       .from(req.user.username)
       .upload(path, fileBase64, {
@@ -58,7 +61,23 @@ fileRouter.post("/upload", upload.single("file"), async (req, res) => {
     const { data: image } = supabase.storage
       .from("images")
       .getPublicUrl(data.path);
-    console.log(file);
+    console.log(data);
+
+    let folder = await prisma.folder.findFirst({
+      where: {
+        ownerId: req.user.id,
+        name: req.body.folder,
+      },
+    });
+    await prisma.file.create({
+      data: {
+        id: data.id,
+        ownerId: req.user.id,
+        folderId: folder.id,
+        name: file.originalname,
+        path: data.path,
+      },
+    });
     res.status(200).redirect("upload/success");
   } catch (error) {
     console.log(error);
@@ -66,5 +85,6 @@ fileRouter.post("/upload", upload.single("file"), async (req, res) => {
   }
 });
 fileRouter.get("/:folderId&:fileId", fileController.getDetails);
+fileRouter.get("/download/:fileId", fileController.downloadFile);
 
 module.exports = fileRouter;

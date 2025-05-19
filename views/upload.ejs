@@ -7,7 +7,7 @@
             <input type="file" name="file" />
             <select name="folder" id="folder">
                 <% folders.forEach(folder=>{ %>
-                    <option value="<%= folder.name %>"><%= folder.name %></option>
+                    <option value="<%= folder.name %>" id="<%= folder.id %>"><%= folder.name %></option>
                 <% }) %>
             </select>
             <input type="submit" value="Upload" class="btn btn-default">
