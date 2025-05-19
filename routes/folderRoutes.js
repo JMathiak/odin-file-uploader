@@ -40,4 +40,5 @@ folderRouter.get("/", loggedIn, folderController.getFolderList);
 folderRouter.post("/delete/:id", folderController.deleteFolder);
 folderRouter.get("/update/:id", loggedIn, folderController.getEditFolder);
 folderRouter.post("/update/:id", folderController.postEditFolder);
+folderRouter.get("/contents/:id", folderController.getFileList);
 module.exports = folderRouter;

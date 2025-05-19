@@ -43,7 +43,26 @@ async function getUploadPage(req, res) {
   res.render("upload", { folders: folders });
 }
 
+async function getDetails(req, res) {
+  let folderID = parseInt(req.params.folderId);
+  let fileID = req.params.fileId;
+
+  let folder = await prisma.folder.findFirst({
+    where: {
+      id: folderID,
+    },
+  });
+
+  const { data, error } = await supabase.storage
+    .from(req.user.username)
+    .list(folder.name);
+
+  const file = data.filter((file) => file.id === fileID);
+
+  res.render("fileDetails", { file: file[0] });
+}
 module.exports = {
   postImage,
   getUploadPage,
+  getDetails,
 };

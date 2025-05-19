@@ -112,10 +112,28 @@ async function postEditFolder(req, res) {
   });
   res.redirect("/");
 }
+
+async function getFileList(req, res) {
+  let fId = parseInt(req.params.id);
+  let folder = await prisma.folder.findFirst({
+    where: {
+      id: fId,
+    },
+  });
+
+  const { data, error } = await supabase.storage
+    .from(req.user.username)
+    .list(folder.name);
+
+  console.log(data);
+  res.render("fileList", { files: data, folderId: fId });
+}
+
 module.exports = {
   createFolder,
   getFolderList,
   deleteFolder,
   getEditFolder,
   postEditFolder,
+  getFileList,
 };

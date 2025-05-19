@@ -1,0 +1,22 @@
+<html>
+    <head>
+        <title>File List</title>
+    </head>
+    <body>
+        <div class="file-container">
+            <% if(files.length > 0){ %>
+            <ul>
+                <% files.forEach((file) =>{ %>
+                    <li><%- file.name%>
+                    <a href="/file/<%= folderId %>&<%= file.id %>">Details</a>
+                    </li>
+                    
+                <% }) %>
+            </ul>
+            <% }else{ %>
+            
+            
+            <% } %>
+        </div>
+    </body>
+</html>

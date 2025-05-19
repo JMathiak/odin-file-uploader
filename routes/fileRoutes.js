@@ -65,5 +65,6 @@ fileRouter.post("/upload", upload.single("file"), async (req, res) => {
     res.status(500).redirect("upload/failure");
   }
 });
+fileRouter.get("/:folderId&:fileId", fileController.getDetails);
 
 module.exports = fileRouter;
