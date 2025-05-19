@@ -27,6 +27,7 @@ model User {
   username String   @unique @db.VarChar(16)
   password String
   Folder   Folder[]
+  File     File[]
 }
 
 model Folder {
@@ -34,4 +35,15 @@ model Folder {
   owner   User   @relation(fields: [ownerId], references: [id])
   ownerId Int
   name    String @unique
+  File    File[]
+}
+
+model File {
+  id       String @id
+  owner    User   @relation(fields: [ownerId], references: [id])
+  ownerId  Int
+  folder   Folder @relation(fields: [folderId], references: [id])
+  folderId Int
+  name     String
+  path     String
 }
